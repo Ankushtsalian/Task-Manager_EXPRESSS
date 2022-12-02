@@ -1,5 +1,6 @@
 require("./DataBase/connect");
 const express = require("express");
+const connectDB = require("./DataBase/connect");
 const app = express();
 const tasks = require("./Router/tasks");
 const Port = 5000;
@@ -15,4 +16,13 @@ app.all("*", (req, res) => {
   res.send("<h1>404 Not found</h1>");
 });
 
-app.listen(Port, () => console.log(`Server is listening in Port ${5000}`));
+const start = async () => {
+  try {
+    await connectDB();
+    app.listen(Port, () => console.log(`Server is listening in Port ${5000}`));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+start();
