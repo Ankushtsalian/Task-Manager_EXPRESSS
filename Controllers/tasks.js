@@ -1,4 +1,5 @@
 const getAllTasks = (req, res) => {
+  console.log("getall");
   return res.send("Task Manager App");
 };
 const createTask = (req, res) => {
