@@ -1,8 +1,8 @@
 //DataBase
 require("./DataBase/connect");
 const express = require("express");
-const connectDB = require("./DataBase/connect");
 const app = express();
+const connectDB = require("./DataBase/connect");
 
 //.env
 require("dotenv").config();
@@ -11,12 +11,11 @@ const Port = 5000;
 
 /*--------------------MIDDLEWARE---------------------- */
 
-app.use(express.static("./public"));
 app.use(express.urlencoded({ extended: false }));
 // app.use(cors());
 app.use(express.json());
 app.use("/api/v1/tasks", tasks);
-
+app.use(express.static("./public"));
 /*--------------------MIDDLEWARE---------------------- */
 
 app.all("*", (req, res) => {

@@ -3,16 +3,16 @@ const Task = require("../Model/Task");
 
 const createTask = async (req, res) => {
   try {
-    const task = await Task.create(req.body);
-    return res.json({ task });
+    const tasks = await Task.create(req.body);
+    return res.json({ tasks });
   } catch (error) {
     return res.status(500).json({ msg: error.errors.name.message });
   }
 };
 const getAllTasks = async (req, res) => {
   try {
-    const task = await Task.find({});
-    return res.status(201).json({ task });
+    const tasks = await Task.find({});
+    return res.status(201).json({ tasks });
   } catch (error) {
     return res.status(500).json({ msg: error.errors.name.message });
   }
@@ -34,9 +34,9 @@ const getTask = async (req, res) => {
 };
 
 const deleteTask = async (req, res) => {
-  const { id } = req.params;
+  const { id: taskId } = req.params;
   try {
-    const task = await Task.findOneAndDelete({ _id: id });
+    const task = await Task.findOneAndDelete({ _id: taskId });
     if (!task)
       return res
         .status(404)
