@@ -65,4 +65,30 @@ const updateTask = async (req, res) => {
   }
 };
 
-module.exports = { getAllTasks, createTask, getTask, updateTask, deleteTask };
+const editTask = async (req, res) => {
+  try {
+    const { id: taskId } = req.params;
+    const task = await Task.findOneAndUpdate({ _id: taskId }, req.body, {
+      new: true,
+      runValidators: true,
+      overwrite: true,
+    });
+    if (!task) {
+      return res
+        .status(404)
+        .json({ msg: ` No Task with ID: ${taskId} in DataBase ` });
+    }
+    return res.status(200).json({ task });
+  } catch (error) {
+    return res.status(500).json({ msg: error });
+  }
+};
+
+module.exports = {
+  getAllTasks,
+  createTask,
+  getTask,
+  updateTask,
+  deleteTask,
+  editTask,
+};
