@@ -3,6 +3,7 @@ require("./DataBase/connect");
 const express = require("express");
 const app = express();
 const connectDB = require("./DataBase/connect");
+const errorHandlerMiddleware = require("./Middleware/Error-Handler");
 const notFound = require("./Middleware/notFound");
 
 //.env
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/api/v1/tasks", tasks);
 app.use(express.static("./public"));
 app.use(notFound);
+app.use(errorHandlerMiddleware);
 /*--------------------MIDDLEWARE---------------------- */
 
 /*----------------------DB  and Server setup---------------------------------- */
