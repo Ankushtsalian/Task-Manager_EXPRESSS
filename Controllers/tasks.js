@@ -1,3 +1,4 @@
+const { validate } = require("../Model/Task");
 const Task = require("../Model/Task");
 
 const createTask = async (req, res) => {
@@ -32,10 +33,6 @@ const getTask = async (req, res) => {
   }
 };
 
-const updateTask = (req, res) => {
-  return res.send("Task Manager App");
-};
-
 const deleteTask = async (req, res) => {
   const { id } = req.params;
   try {
@@ -45,6 +42,24 @@ const deleteTask = async (req, res) => {
         .status(404)
         .json({ msg: ` No Task with ID: ${id} in DataBase ` });
     return res.status(201).json({ success: true, data: null });
+  } catch (error) {
+    return res.status(500).json({ msg: error });
+  }
+};
+
+const updateTask = async (req, res) => {
+  try {
+    const { id: taskId } = req.params;
+    const task = await Task.findOneAndUpdate({ _id: taskId }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!task) {
+      return res
+        .status(404)
+        .json({ msg: ` No Task with ID: ${taskId} in DataBase ` });
+    }
+    return res.status(200).json({ task });
   } catch (error) {
     return res.status(500).json({ msg: error });
   }
