@@ -3,6 +3,7 @@ require("./DataBase/connect");
 const express = require("express");
 const app = express();
 const connectDB = require("./DataBase/connect");
+const notFound = require("./notFound");
 
 //.env
 require("dotenv").config();
@@ -16,11 +17,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use("/api/v1/tasks", tasks);
 app.use(express.static("./public"));
+app.use(notFound);
 /*--------------------MIDDLEWARE---------------------- */
-
-app.all("*", (req, res) => {
-  res.send("<h1>404 Not found</h1>");
-});
 
 /*----------------------DB  and Server setup---------------------------------- */
 
