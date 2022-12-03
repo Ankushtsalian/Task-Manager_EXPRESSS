@@ -1,88 +1,66 @@
-const { validate } = require("../Model/Task");
+const asyncWrapper = require("../Middleware/Async");
 const Task = require("../Model/Task");
 
-const createTask = async (req, res) => {
-  try {
-    const tasks = await Task.create(req.body);
-    return res.json({ tasks });
-  } catch (error) {
-    return res.status(500).json({ msg: error.errors.name.message });
-  }
-};
-const getAllTasks = async (req, res) => {
-  try {
-    const tasks = await Task.find({});
-    return res.status(201).json({ tasks });
-  } catch (error) {
-    return res.status(500).json({ msg: error.errors.name.message });
-  }
-};
+const createTask = asyncWrapper(async (req, res) => {
+  const tasks = await Task.create(req.body);
+  return res.json({ tasks });
+});
 
-const getTask = async (req, res) => {
-  try {
-    const { id: taskId } = req.params;
-    const task = await Task.findOne({ _id: taskId });
-    if (!task) {
-      return res
-        .status(404)
-        .json({ msg: ` No Task with ID: ${taskId} in DataBase ` });
-    }
-    return res.status(200).json({ task });
-  } catch (error) {
-    return res.status(500).json({ msg: error });
-  }
-};
+const getAllTasks = asyncWrapper(async (req, res) => {
+  const tasks = await Task.find({});
+  return res.status(201).json({ tasks });
+});
 
-const deleteTask = async (req, res) => {
+const getTask = asyncWrapper(async (req, res) => {
   const { id: taskId } = req.params;
-  try {
-    const task = await Task.findOneAndDelete({ _id: taskId });
-    if (!task)
-      return res
-        .status(404)
-        .json({ msg: ` No Task with ID: ${id} in DataBase ` });
-    return res.status(201).json({ success: true, data: null });
-  } catch (error) {
-    return res.status(500).json({ msg: error });
+  const task = await Task.findOne({ _id: taskId });
+  if (!task) {
+    return res
+      .status(404)
+      .json({ msg: ` No Task with ID: ${taskId} in DataBase ` });
   }
-};
+  return res.status(200).json({ task });
+});
 
-const updateTask = async (req, res) => {
-  try {
-    const { id: taskId } = req.params;
-    const task = await Task.findOneAndUpdate({ _id: taskId }, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!task) {
-      return res
-        .status(404)
-        .json({ msg: ` No Task with ID: ${taskId} in DataBase ` });
-    }
-    return res.status(200).json({ task });
-  } catch (error) {
-    return res.status(500).json({ msg: error });
-  }
-};
+const deleteTask = asyncWrapper(async (req, res) => {
+  const { id: taskId } = req.params;
 
-const editTask = async (req, res) => {
-  try {
-    const { id: taskId } = req.params;
-    const task = await Task.findOneAndUpdate({ _id: taskId }, req.body, {
-      new: true,
-      runValidators: true,
-      overwrite: true,
-    });
-    if (!task) {
-      return res
-        .status(404)
-        .json({ msg: ` No Task with ID: ${taskId} in DataBase ` });
-    }
-    return res.status(200).json({ task });
-  } catch (error) {
-    return res.status(500).json({ msg: error });
+  const task = await Task.findOneAndDelete({ _id: taskId });
+  if (!task)
+    return res
+      .status(404)
+      .json({ msg: ` No Task with ID: ${id} in DataBase ` });
+  return res.status(201).json({ success: true, data: null });
+});
+
+const updateTask = asyncWrapper(async (req, res) => {
+  const { id: taskId } = req.params;
+  const task = await Task.findOneAndUpdate({ _id: taskId }, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!task) {
+    return res
+      .status(404)
+      .json({ msg: ` No Task with ID: ${taskId} in DataBase ` });
   }
-};
+  return res.status(200).json({ task });
+});
+
+const editTask = asyncWrapper(async (req, res) => {
+  const { id: taskId } = req.params;
+  const task = await Task.findOneAndUpdate({ _id: taskId }, req.body, {
+    new: true,
+    runValidators: true,
+    overwrite: true,
+  });
+  if (!task) {
+    return res
+      .status(404)
+      .json({ msg: ` No Task with ID: ${taskId} in DataBase ` });
+  }
+  return res.status(200).json({ task });
+});
 
 module.exports = {
   getAllTasks,

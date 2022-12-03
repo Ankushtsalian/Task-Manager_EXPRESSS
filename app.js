@@ -3,7 +3,7 @@ require("./DataBase/connect");
 const express = require("express");
 const app = express();
 const connectDB = require("./DataBase/connect");
-const notFound = require("./notFound");
+const notFound = require("./Middleware/notFound");
 
 //.env
 require("dotenv").config();
