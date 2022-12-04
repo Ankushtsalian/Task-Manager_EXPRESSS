@@ -16,13 +16,19 @@ const getAllTasks = asyncWrapper(async (req, res) => {
 /**------------------------------------------------------------- */
 
 /**-----------------------getTask--------------------------- */
-const getTask = asyncWrapper(async (req, res) => {
+const getTask = asyncWrapper(async (req, res, next) => {
   const { id: taskId } = req.params;
   const task = await Task.findOne({ _id: taskId });
   if (!task) {
-    return res
-      .status(404)
-      .json({ msg: ` No Task with ID: ${taskId} in DataBase ` });
+    /**-----------Custom error setup demo-------------- */
+    const error = new Error("Not Found");
+    error.status = 404;
+    console.log(error);
+    return next(error);
+    /**-----------Custom error setup demo-------------- */
+    // return res
+    //   .status(404)
+    //   .json({ msg: ` No Task with ID: ${taskId} in DataBase ` });
   }
   return res.status(200).json({ task });
 });
