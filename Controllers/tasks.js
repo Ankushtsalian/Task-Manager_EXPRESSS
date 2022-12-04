@@ -1,6 +1,6 @@
 const asyncWrapper = require("../Middleware/Async");
 const Task = require("../Model/Task");
-
+const { createCustomError } = require("../errors/Custom-error");
 /**-----------------------Create Task--------------------------- */
 const createTask = asyncWrapper(async (req, res) => {
   const tasks = await Task.create(req.body);
@@ -21,10 +21,9 @@ const getTask = asyncWrapper(async (req, res, next) => {
   const task = await Task.findOne({ _id: taskId });
   if (!task) {
     /**-----------Custom error setup demo-------------- */
-    const error = new Error("Not Found");
-    error.status = 404;
-    console.log(error);
-    return next(error);
+    return next(
+      createCustomError(` No Task with ID: ${taskId} in DataBase `, 404)
+    );
     /**-----------Custom error setup demo-------------- */
     // return res
     //   .status(404)
@@ -39,10 +38,11 @@ const deleteTask = asyncWrapper(async (req, res) => {
   const { id: taskId } = req.params;
 
   const task = await Task.findOneAndDelete({ _id: taskId });
-  if (!task)
-    return res
-      .status(404)
-      .json({ msg: ` No Task with ID: ${id} in DataBase ` });
+  if (!task) {
+    return next(
+      createCustomError(` No Task with ID: ${taskId} in DataBase `, 404)
+    );
+  }
   return res.status(201).json({ success: true, data: null });
 });
 /**------------------------------------------------------------- */
@@ -55,9 +55,9 @@ const updateTask = asyncWrapper(async (req, res) => {
     runValidators: true,
   });
   if (!task) {
-    return res
-      .status(404)
-      .json({ msg: ` No Task with ID: ${taskId} in DataBase ` });
+    return next(
+      createCustomError(` No Task with ID: ${taskId} in DataBase `, 404)
+    );
   }
   return res.status(200).json({ task });
 });
@@ -72,9 +72,9 @@ const editTask = asyncWrapper(async (req, res) => {
     overwrite: true,
   });
   if (!task) {
-    return res
-      .status(404)
-      .json({ msg: ` No Task with ID: ${taskId} in DataBase ` });
+    return next(
+      createCustomError(` No Task with ID: ${taskId} in DataBase `, 404)
+    );
   }
   return res.status(200).json({ task });
 });
