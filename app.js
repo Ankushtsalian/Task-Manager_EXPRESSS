@@ -9,7 +9,8 @@ const notFound = require("./Middleware/notFound");
 //.env
 require("dotenv").config();
 const tasks = require("./Router/tasks");
-const Port = 5000;
+//Dynamic Port
+const Port = process.env.PORT || 5000;
 
 /*--------------------MIDDLEWARE---------------------- */
 
